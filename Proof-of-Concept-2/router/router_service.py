@@ -60,7 +60,7 @@ REGISTRY: List[Dict[str, Any]] = [
         "capabilities": ["echo"],
         "requires": ["identity"],
         "priority": 200,
-        "url": os.getenv("ECHO_URL", "http://node-echo:8091/ancp"),
+        "url": os.getenv("ECHO_URL", "http://node-echo:8091/bdp"),
     },
     {
         "node_id": "planner.alpha",
@@ -69,7 +69,7 @@ REGISTRY: List[Dict[str, Any]] = [
         "capabilities": ["plan_route"],
         "requires": [],
         "priority": 100,
-        "url": os.getenv("PLANNER_URL", "http://node-planner:8094/ancp"),
+        "url": os.getenv("PLANNER_URL", "http://node-planner:8094/bdp"),
     },
     {
         "node_id": "adapter.v02_to_v01",
@@ -78,7 +78,7 @@ REGISTRY: List[Dict[str, Any]] = [
         "capabilities": ["adapt_protocol"],
         "requires": [],
         "priority": 120,
-        "url": os.getenv("ADAPTER_URL", "http://node-adapter:8093/ancp"),
+        "url": os.getenv("ADAPTER_URL", "http://node-adapter:8093/bdp"),
         "target_protocol_version": "0.1",
     },
     {
@@ -88,7 +88,7 @@ REGISTRY: List[Dict[str, Any]] = [
         "capabilities": ["log_event"],
         "requires": [],
         "priority": 50,
-        "url": os.getenv("LOGGER_URL", "http://node-logger:8092/ancp"),
+        "url": os.getenv("LOGGER_URL", "http://node-logger:8092/bdp"),
     },
 ]
 

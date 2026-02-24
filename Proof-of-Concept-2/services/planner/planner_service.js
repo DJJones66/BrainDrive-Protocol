@@ -152,7 +152,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (req.method !== "POST" || req.url !== "/ancp") {
+  if (req.method !== "POST" || req.url !== "/bdp") {
     sendJson(res, 404, { ok: false });
     return;
   }

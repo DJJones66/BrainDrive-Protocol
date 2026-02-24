@@ -1,15 +1,15 @@
-# Braindrive Protocal (BDP)
+# BrainDrive Protocol (BDP)
 
 Version: `0.1` (Foundational Specification)  
 Status: Draft
 
-This document defines the **Braindrive Protocal** as the canonical name for the protocol previously referred to as ANCP in concept drafts.
+This document defines the **BrainDrive Protocol** as the canonical name for the protocol from earlier concept drafts.
 
 ---
 
 ## 1. Abstract
 
-Braindrive Protocal (BDP) defines a minimal, extensible message contract for modular node-based systems.
+BrainDrive Protocol (BDP) defines a minimal, extensible message contract for modular node-based systems.
 
 BDP enables:
 
@@ -496,7 +496,7 @@ Everything else is layered on top of this minimal contract.
 
 ## 14. Summary
 
-Braindrive Protocal provides:
+BrainDrive Protocol provides:
 
 - A stable core for node-to-node messaging
 - Capability-driven interoperability

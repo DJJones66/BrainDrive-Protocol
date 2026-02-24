@@ -47,7 +47,7 @@ If PoC 1 fails, higher-level PoCs are not meaningful.
 
 Single container, interactive terminal app:
 
-- `ancp_demo.py` (router + nodes + planner + logger simulation)
+- `bdp_demo.py` (router + nodes + planner + logger simulation)
 
 ## Quick start
 

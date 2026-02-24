@@ -31,7 +31,7 @@ class LoggerHandler(BaseHTTPRequestHandler):
         self._send_json(404, {"ok": False})
 
     def do_POST(self) -> None:
-        if self.path != "/ancp":
+        if self.path != "/bdp":
             self._send_json(404, {"ok": False})
             return
 

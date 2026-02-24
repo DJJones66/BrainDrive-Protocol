@@ -7,10 +7,10 @@ services:
       PYTHONPATH: /workspace
       BDP_DATA_DIR: /workspace/data
       ROUTER_PORT: "8080"
-      ECHO_URL: http://node-echo:8091/ancp
-      LOGGER_URL: http://node-logger:8092/ancp
-      ADAPTER_URL: http://node-adapter:8093/ancp
-      PLANNER_URL: http://node-planner:8094/ancp
+      ECHO_URL: http://node-echo:8091/bdp
+      LOGGER_URL: http://node-logger:8092/bdp
+      ADAPTER_URL: http://node-adapter:8093/bdp
+      PLANNER_URL: http://node-planner:8094/bdp
       NODE_TIMEOUT_SEC: "3.0"
     volumes:
       - ./:/workspace
