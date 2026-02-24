@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BrainDrive PoC5 Secure UI</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a30;
+      --panel-2: #1b2746;
+      --text: #e8eefc;
+      --muted: #95a4cb;
+      --accent: #55d6be;
+      --danger: #f06b7e;
+      --border: #2d3b63;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 10% -10%, #1a315f 0%, transparent 60%),
+        radial-gradient(700px 500px at 90% -10%, #23466f 0%, transparent 65%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .title {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 14px;
+    }
+
+    .columns {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1.2fr 1fr 1fr;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    select, textarea, input, button {
+      font: inherit;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #0c1224;
+      color: var(--text);
+      padding: 10px;
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+      margin-top: 12px;
+      line-height: 1.35;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+      align-items: center;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: #1d2a4a;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border-color: #3a8f7f;
+      background: #0d5a4f;
+    }
+
+    button.warn {
+      border-color: #7f3a48;
+      background: #5d1c2a;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .pill {
+      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 10px;
+      color: var(--muted);
+    }
+
+    pre {
+      margin: 0;
+      background: #090f1f;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 240px;
+      max-height: 560px;
+      overflow: auto;
+    }
+
+    .token {
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 1100px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card" id="loginCard">
+      <h1 class="title">BrainDrive PoC5 Secure Login</h1>
+      <p class="sub">Same routing UX as PoC4, now protected by JWT authentication and role-based admin controls.</p>
+
+      <div class="grid">
+        <div>
+          <label for="usernameInput">Username</label>
+          <input id="usernameInput" type="text" value="tester" autocomplete="username">
+        </div>
+        <div>
+          <label for="passwordInput">Password</label>
+          <input id="passwordInput" type="password" value="password" autocomplete="current-password">
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="primary" id="loginBtn">Sign In</button>
+        <span class="status" id="loginStatus">not authenticated</span>
+      </div>
+    </section>
+
+    <section class="card hidden" id="appCard">
+      <h1 class="title">BrainDrive PoC5 Secure Streaming UI</h1>
+      <p class="sub">Router: <span id="routerOrigin"></span></p>
+
+      <div class="row" style="margin-top:10px">
+        <span class="pill" id="sessionBadge">session: unknown</span>
+        <span class="pill" id="rolesBadge">roles: []</span>
+        <button id="refreshAuditBtn">Refresh Audit</button>
+        <button class="warn" id="logoutBtn">Logout</button>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label for="nodeSelect">Node</label>
+          <select id="nodeSelect"></select>
+        </div>
+        <div>
+          <label for="modelSelect">Model</label>
+          <select id="modelSelect"></select>
+        </div>
+        <div>
+          <label for="maxTokens">Max Tokens (num_predict)</label>
+          <input id="maxTokens" type="number" min="1" step="1" value="512" placeholder="512">
+        </div>
+        <div>
+          <label for="stopSeqInput">Stop Sequences (comma-separated)</label>
+          <input id="stopSeqInput" type="text" placeholder="<|eot_id|>, </s>">
+        </div>
+      </div>
+
+      <textarea id="promptInput" placeholder="Ask something... Example: /node:builder /model:qwen3:8b Build a secure streaming architecture."></textarea>
+
+      <div class="row">
+        <button class="primary" id="streamBtn">Stream</button>
+        <button id="completeBtn">Complete</button>
+        <button id="clearBtn">Clear</button>
+        <button class="warn" id="stopBtn" disabled>Stop Stream</button>
+        <span class="status" id="statusLine">idle</span>
+      </div>
+    </section>
+
+    <section class="columns hidden" id="outputColumns">
+      <div class="card">
+        <h2 class="title" style="font-size:16px">Assistant Output</h2>
+        <pre id="output" class="token"></pre>
+      </div>
+      <div class="card">
+        <h2 class="title" style="font-size:16px">Events</h2>
+        <pre id="events" class="meta"></pre>
+      </div>
+      <div class="card">
+        <h2 class="title" style="font-size:16px">Audit (Admin Only)</h2>
+        <pre id="audit" class="meta"></pre>
+      </div>
+    </section>
+
+    <section class="card hidden" id="adminCard">
+      <h2 class="title" style="font-size:18px">Admin: Multi-User Onboarding</h2>
+      <p class="sub">Create and update users stored in `data/users.json`.</p>
+
+      <div class="grid">
+        <div>
+          <label for="newUsername">New Username</label>
+          <input id="newUsername" type="text" placeholder="analyst1">
+        </div>
+        <div>
+          <label for="newPassword">New Password</label>
+          <input id="newPassword" type="password" placeholder="min 8 chars">
+        </div>
+        <div>
+          <label for="newRoles">Roles (comma-separated)</label>
+          <input id="newRoles" type="text" value="user" placeholder="user,admin">
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <label style="display:flex;gap:8px;align-items:center;color:var(--text)">
+            <input type="checkbox" id="newActive" checked style="width:auto">
+            Active
+          </label>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="primary" id="createUserBtn">Create User</button>
+      </div>
+
+      <div class="grid" style="margin-top:18px">
+        <div>
+          <label for="updateUsername">Update Username</label>
+          <input id="updateUsername" type="text" placeholder="existing user">
+        </div>
+        <div>
+          <label for="updatePassword">New Password (optional)</label>
+          <input id="updatePassword" type="password" placeholder="leave blank to keep">
+        </div>
+        <div>
+          <label for="updateRoles">New Roles (optional)</label>
+          <input id="updateRoles" type="text" placeholder="user,admin">
+        </div>
+        <div>
+          <label for="updateActive">Set Active (optional)</label>
+          <select id="updateActive">
+            <option value="">No change</option>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <button id="updateUserBtn">Update User</button>
+        <button id="refreshUsersBtn">Refresh User List</button>
+      </div>
+
+      <pre id="usersList" class="meta" style="margin-top:12px;min-height:180px"></pre>
+    </section>
+  </div>
+
+  <script>
+    const loginCard = document.getElementById('loginCard');
+    const appCard = document.getElementById('appCard');
+    const outputColumns = document.getElementById('outputColumns');
+    const adminCard = document.getElementById('adminCard');
+
+    const usernameInput = document.getElementById('usernameInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginStatus = document.getElementById('loginStatus');
+    const sessionBadge = document.getElementById('sessionBadge');
+    const rolesBadge = document.getElementById('rolesBadge');
+    const refreshAuditBtn = document.getElementById('refreshAuditBtn');
+
+    const nodeSelect = document.getElementById('nodeSelect');
+    const modelSelect = document.getElementById('modelSelect');
+    const maxTokens = document.getElementById('maxTokens');
+    const stopSeqInput = document.getElementById('stopSeqInput');
+    const promptInput = document.getElementById('promptInput');
+
+    const output = document.getElementById('output');
+    const events = document.getElementById('events');
+    const audit = document.getElementById('audit');
+
+    const streamBtn = document.getElementById('streamBtn');
+    const completeBtn = document.getElementById('completeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const statusLine = document.getElementById('statusLine');
+
+    const newUsername = document.getElementById('newUsername');
+    const newPassword = document.getElementById('newPassword');
+    const newRoles = document.getElementById('newRoles');
+    const newActive = document.getElementById('newActive');
+    const createUserBtn = document.getElementById('createUserBtn');
+
+    const updateUsername = document.getElementById('updateUsername');
+    const updatePassword = document.getElementById('updatePassword');
+    const updateRoles = document.getElementById('updateRoles');
+    const updateActive = document.getElementById('updateActive');
+    const updateUserBtn = document.getElementById('updateUserBtn');
+    const refreshUsersBtn = document.getElementById('refreshUsersBtn');
+    const usersList = document.getElementById('usersList');
+
+    let nodeProfiles = {};
+    let abortController = null;
+    let currentUser = null;
+    let currentRoles = [];
+
+    document.getElementById('routerOrigin').textContent = window.location.origin;
+
+    function hasRole(role) {
+      return Array.isArray(currentRoles) && currentRoles.includes(role);
+    }
+
+    function setAuthenticated(isAuthenticated) {
+      loginCard.classList.toggle('hidden', isAuthenticated);
+      appCard.classList.toggle('hidden', !isAuthenticated);
+      outputColumns.classList.toggle('hidden', !isAuthenticated);
+      if (!isAuthenticated) {
+        currentUser = null;
+        currentRoles = [];
+        adminCard.classList.add('hidden');
+        setBusy(false);
+      }
+    }
+
+    function setAdminVisible() {
+      const admin = hasRole('admin');
+      adminCard.classList.toggle('hidden', !admin);
+      refreshAuditBtn.disabled = !admin;
+      if (!admin) {
+        audit.textContent = 'Audit is admin-only in PoC5.';
+        usersList.textContent = 'Admin user list is only visible to admin role.';
+      }
+    }
+
+    function appendEvent(line) {
+      const prefix = new Date().toLocaleTimeString();
+      events.textContent += `[${prefix}] ${line}\n`;
+      events.scrollTop = events.scrollHeight;
+    }
+
+    function setStatus(text, cls = '') {
+      statusLine.textContent = text;
+      statusLine.className = 'status ' + cls;
+    }
+
+    function setBusy(isBusy) {
+      streamBtn.disabled = isBusy;
+      completeBtn.disabled = isBusy;
+      stopBtn.disabled = !isBusy;
+    }
+
+    function resetOutput() {
+      output.textContent = '';
+      events.textContent = '';
+    }
+
+    function generateMessageId() {
+      if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        return window.crypto.randomUUID();
+      }
+
+      if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+        const bytes = new Uint8Array(16);
+        window.crypto.getRandomValues(bytes);
+        bytes[6] = (bytes[6] & 0x0f) | 0x40;
+        bytes[8] = (bytes[8] & 0x3f) | 0x80;
+        const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+        return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+      }
+
+      return `fallback-${Date.now().toString(16)}-${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16)}`;
+    }
+
+    function buildMessage() {
+      const parsedMaxTokens = Number.parseInt(maxTokens.value, 10);
+      const message = {
+        protocol_version: '0.1',
+        message_id: generateMessageId(),
+        intent: 'chat',
+        payload: {
+          text: promptInput.value,
+        },
+        extensions: {
+          llm: {
+            node: nodeSelect.value,
+            model: modelSelect.value,
+          },
+        },
+      };
+
+      if (Number.isFinite(parsedMaxTokens) && parsedMaxTokens > 0) {
+        message.extensions.llm.max_tokens = parsedMaxTokens;
+      }
+
+      const stopSeq = stopSeqInput.value
+        .split(',')
+        .map((value) => value.trim())
+        .filter((value) => value.length > 0);
+      if (stopSeq.length > 0) {
+        message.extensions.llm.stop = stopSeq;
+      }
+
+      return message;
+    }
+
+    async function apiFetch(url, options = {}) {
+      const res = await fetch(url, {
+        credentials: 'include',
+        ...options,
+      });
+      if (res.status === 401) {
+        setAuthenticated(false);
+        loginStatus.textContent = 'session expired';
+        throw new Error('unauthorized');
+      }
+      return res;
+    }
+
+    async function login() {
+      loginStatus.textContent = 'authenticating...';
+      try {
+        const res = await fetch('/auth/login', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: usernameInput.value.trim(),
+            password: passwordInput.value,
+          }),
+        });
+
+        const payload = await res.json();
+        if (!res.ok || !payload.ok) {
+          loginStatus.textContent = `login failed (${payload.error || res.status})`;
+          return;
+        }
+
+        await loadSession();
+        await initApp();
+        loginStatus.textContent = 'authenticated';
+      } catch (err) {
+        loginStatus.textContent = `login error: ${err}`;
+      }
+    }
+
+    async function logout() {
+      try {
+        await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+      } catch {
+      }
+      setAuthenticated(false);
+      loginStatus.textContent = 'not authenticated';
+      sessionBadge.textContent = 'session: unknown';
+      rolesBadge.textContent = 'roles: []';
+      audit.textContent = '';
+      usersList.textContent = '';
+    }
+
+    async function loadSession() {
+      const res = await apiFetch('/auth/me');
+      const payload = await res.json();
+      if (!payload.ok) throw new Error('session_invalid');
+
+      const user = payload.user || {};
+      currentUser = user.username || 'unknown';
+      currentRoles = Array.isArray(user.roles) ? user.roles : [];
+      sessionBadge.textContent = `session: ${currentUser}`;
+      rolesBadge.textContent = `roles: ${currentRoles.join(', ') || 'none'}`;
+      setAuthenticated(true);
+      setAdminVisible();
+    }
+
+    async function loadNodes() {
+      const res = await apiFetch('/nodes');
+      const payload = await res.json();
+      nodeProfiles = payload.nodes || {};
+
+      nodeSelect.innerHTML = '';
+      Object.keys(nodeProfiles).forEach((key) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = `${key} (${nodeProfiles[key].default_model})`;
+        nodeSelect.appendChild(option);
+      });
+
+      nodeSelect.value = 'general';
+    }
+
+    async function loadModels() {
+      const res = await apiFetch('/models');
+      const payload = await res.json();
+      const models = payload.models || [];
+
+      modelSelect.innerHTML = '';
+      models.forEach((model) => {
+        const option = document.createElement('option');
+        option.value = model;
+        option.textContent = model;
+        modelSelect.appendChild(option);
+      });
+
+      const defaultModel = nodeProfiles[nodeSelect.value]?.default_model;
+      if (defaultModel && models.includes(defaultModel)) {
+        modelSelect.value = defaultModel;
+      }
+    }
+
+    async function loadRouterDefaults() {
+      const res = await fetch('/api');
+      if (!res.ok) return;
+      const payload = await res.json();
+
+      if (Number.isInteger(payload.ollama_default_max_tokens) && payload.ollama_default_max_tokens > 0) {
+        maxTokens.value = String(payload.ollama_default_max_tokens);
+      }
+      if (Array.isArray(payload.ollama_default_stop) && payload.ollama_default_stop.length > 0) {
+        stopSeqInput.value = payload.ollama_default_stop.join(', ');
+      }
+    }
+
+    async function loadAudit() {
+      if (!hasRole('admin')) {
+        audit.textContent = 'Audit is admin-only in PoC5.';
+        return;
+      }
+
+      try {
+        const res = await apiFetch('/audit/recent?limit=40');
+        const payload = await res.json();
+        if (!payload.ok) {
+          audit.textContent = JSON.stringify(payload, null, 2);
+          return;
+        }
+
+        const rows = payload.combined || [];
+        const rendered = rows.map((row) => JSON.stringify(row)).join('\n');
+        audit.textContent = rendered || '(no audit rows yet)';
+        audit.scrollTop = audit.scrollHeight;
+      } catch (err) {
+        audit.textContent = `audit error: ${err}`;
+      }
+    }
+
+    async function loadUsersAdmin() {
+      if (!hasRole('admin')) {
+        usersList.textContent = 'Admin user list is only visible to admin role.';
+        return;
+      }
+
+      try {
+        const res = await apiFetch('/admin/users');
+        const payload = await res.json();
+        if (!payload.ok) {
+          usersList.textContent = JSON.stringify(payload, null, 2);
+          return;
+        }
+        usersList.textContent = JSON.stringify(payload.users || [], null, 2);
+      } catch (err) {
+        usersList.textContent = `users error: ${err}`;
+      }
+    }
+
+    async function createUserAdmin() {
+      if (!hasRole('admin')) return;
+
+      const username = newUsername.value.trim();
+      const password = newPassword.value;
+      const roles = newRoles.value
+        .split(',')
+        .map((v) => v.trim())
+        .filter((v) => v.length > 0);
+
+      if (!username || !password) {
+        appendEvent('admin create user requires username + password');
+        return;
+      }
+
+      try {
+        const res = await apiFetch('/admin/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username,
+            password,
+            roles,
+            active: newActive.checked,
+          }),
+        });
+        const payload = await res.json();
+        if (!payload.ok) {
+          appendEvent(`create user failed: ${payload.error || res.status}`);
+          return;
+        }
+        appendEvent(`admin created user: ${payload.user.username}`);
+        newPassword.value = '';
+        await loadUsersAdmin();
+        await loadAudit();
+      } catch (err) {
+        appendEvent(`create user error: ${err}`);
+      }
+    }
+
+    async function updateUserAdmin() {
+      if (!hasRole('admin')) return;
+
+      const username = updateUsername.value.trim();
+      if (!username) {
+        appendEvent('admin update user requires username');
+        return;
+      }
+
+      const body = { username };
+      if (updatePassword.value) body.password = updatePassword.value;
+      if (updateRoles.value.trim()) {
+        body.roles = updateRoles.value
+          .split(',')
+          .map((v) => v.trim())
+          .filter((v) => v.length > 0);
+      }
+      if (updateActive.value === 'true') body.active = true;
+      if (updateActive.value === 'false') body.active = false;
+
+      try {
+        const res = await apiFetch('/admin/users/update', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const payload = await res.json();
+        if (!payload.ok) {
+          appendEvent(`update user failed: ${payload.error || res.status}`);
+          return;
+        }
+        appendEvent(`admin updated user: ${payload.user.username} (${(payload.changed || []).join(', ')})`);
+        updatePassword.value = '';
+        await loadUsersAdmin();
+        await loadAudit();
+      } catch (err) {
+        appendEvent(`update user error: ${err}`);
+      }
+    }
+
+    function parseSseChunk(chunk) {
+      let event = 'message';
+      let data = '';
+
+      chunk.split('\n').forEach((line) => {
+        if (line.startsWith('event:')) {
+          event = line.slice(6).trim();
+        } else if (line.startsWith('data:')) {
+          let segment = line.slice(5);
+          if (segment.startsWith(' ')) segment = segment.slice(1);
+          data += segment;
+        }
+      });
+
+      let payload = {};
+      if (data) {
+        try {
+          payload = JSON.parse(data);
+        } catch {
+          payload = { raw: data };
+        }
+      }
+
+      if (event === 'meta') {
+        appendEvent(`meta actor=${payload.actor} node=${payload.node} model=${payload.model} max_tokens=${payload.max_tokens} stop_count=${payload.stop_count || 0}`);
+        return { terminal: false };
+      }
+
+      if (event === 'token') {
+        output.textContent += payload.text || '';
+        return { terminal: false };
+      }
+
+      if (event === 'done') {
+        appendEvent(`done route_mode=${payload.route_mode || 'stream'} token_events=${payload.token_events || 0} reason=${payload.ollama_done_reason || 'n/a'}`);
+        return { terminal: true, outcome: 'done' };
+      }
+
+      if (event === 'error') {
+        appendEvent(`error ${JSON.stringify(payload)}`);
+        return { terminal: true, outcome: 'error' };
+      }
+
+      return { terminal: false };
+    }
+
+    async function runStream() {
+      const message = buildMessage();
+      if (!message.payload.text.trim()) {
+        appendEvent('prompt is empty');
+        return;
+      }
+
+      resetOutput();
+      setBusy(true);
+      setStatus('streaming...', 'ok');
+      appendEvent(`stream request id=${message.message_id}`);
+
+      abortController = new AbortController();
+
+      try {
+        const res = await fetch('/stream', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message),
+          signal: abortController.signal,
+        });
+
+        if (res.status === 401) {
+          setAuthenticated(false);
+          loginStatus.textContent = 'session expired';
+          setStatus('unauthorized', 'err');
+          return;
+        }
+
+        if (!res.ok || !res.body) {
+          appendEvent(`stream failed status=${res.status}`);
+          setStatus('error', 'err');
+          return;
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let terminalOutcome = null;
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          buffer = buffer.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+          let idx;
+          while ((idx = buffer.indexOf('\n\n')) >= 0) {
+            const chunk = buffer.slice(0, idx);
+            buffer = buffer.slice(idx + 2);
+            if (chunk.trim()) {
+              const parsed = parseSseChunk(chunk);
+              if (parsed && parsed.terminal) {
+                terminalOutcome = parsed.outcome || 'done';
+                try {
+                  await reader.cancel();
+                } catch {
+                }
+                break;
+              }
+            }
+          }
+
+          if (terminalOutcome) break;
+        }
+
+        if (!terminalOutcome && buffer.trim()) {
+          const parsed = parseSseChunk(buffer.trim());
+          if (parsed && parsed.terminal) {
+            terminalOutcome = parsed.outcome || 'done';
+          }
+        }
+
+        if (terminalOutcome === 'error') {
+          setStatus('error', 'err');
+        } else if (terminalOutcome === 'done') {
+          setStatus('stream complete', 'ok');
+        } else {
+          appendEvent('stream ended without terminal event');
+          setStatus('stream ended', 'err');
+        }
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          appendEvent('stream aborted by user');
+          setStatus('aborted');
+        } else {
+          appendEvent(`stream exception: ${err}`);
+          setStatus('error', 'err');
+        }
+      } finally {
+        abortController = null;
+        setBusy(false);
+        await loadAudit();
+      }
+    }
+
+    async function runComplete() {
+      const message = buildMessage();
+      if (!message.payload.text.trim()) {
+        appendEvent('prompt is empty');
+        return;
+      }
+
+      resetOutput();
+      setBusy(true);
+      setStatus('waiting complete...', 'ok');
+      appendEvent(`complete request id=${message.message_id}`);
+
+      try {
+        const res = await apiFetch('/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message),
+        });
+        const payload = await res.json();
+        output.textContent = JSON.stringify(payload, null, 2);
+
+        if (payload.intent === 'error') {
+          appendEvent('complete returned error');
+          setStatus('error', 'err');
+        } else {
+          appendEvent('complete returned response');
+          setStatus('complete done', 'ok');
+        }
+      } catch (err) {
+        appendEvent(`complete exception: ${err}`);
+        setStatus('error', 'err');
+      } finally {
+        setBusy(false);
+        await loadAudit();
+      }
+    }
+
+    async function initApp() {
+      await loadNodes();
+      await loadModels();
+      await loadRouterDefaults();
+      await loadAudit();
+      await loadUsersAdmin();
+      appendEvent('ready');
+      setStatus('idle');
+    }
+
+    nodeSelect.addEventListener('change', () => {
+      const model = nodeProfiles[nodeSelect.value]?.default_model;
+      if (model) {
+        modelSelect.value = model;
+      }
+    });
+
+    loginBtn.addEventListener('click', login);
+    logoutBtn.addEventListener('click', logout);
+    refreshAuditBtn.addEventListener('click', loadAudit);
+
+    streamBtn.addEventListener('click', runStream);
+    completeBtn.addEventListener('click', runComplete);
+    clearBtn.addEventListener('click', () => resetOutput());
+    stopBtn.addEventListener('click', () => {
+      if (abortController) {
+        abortController.abort();
+      }
+    });
+
+    createUserBtn.addEventListener('click', createUserAdmin);
+    updateUserBtn.addEventListener('click', updateUserAdmin);
+    refreshUsersBtn.addEventListener('click', loadUsersAdmin);
+
+    passwordInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        login();
+      }
+    });
+
+    (async () => {
+      try {
+        await loadSession();
+        await initApp();
+        loginStatus.textContent = 'authenticated';
+      } catch {
+        setAuthenticated(false);
+        loginStatus.textContent = 'not authenticated';
+      }
+    })();
+  </script>
+</body>
+</html>

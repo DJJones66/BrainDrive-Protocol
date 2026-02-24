@@ -1,0 +1,46 @@
+# OS / editor metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+.python-version
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs / runtime artifacts
+*.log
+*.pid
+
+# Docker bind-mount runtime state and generated data
+Proof-of-Concept-*/data/
+
+# Local scratch notes
+Concepts/

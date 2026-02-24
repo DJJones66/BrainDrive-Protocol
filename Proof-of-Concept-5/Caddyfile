@@ -1,0 +1,21 @@
+{
+  admin off
+  default_sni {$BDP_HOST:localhost}
+}
+
+http://{$BDP_HOST:localhost} {
+  redir https://{$BDP_HOST:localhost}:{$CADDY_HTTPS_PORT:8443}{uri} 308
+}
+
+https://{$BDP_HOST:localhost} {
+  tls internal
+  reverse_proxy bdp-secure-router:8080
+
+  header {
+    Strict-Transport-Security "max-age=31536000"
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "DENY"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    -Server
+  }
+}

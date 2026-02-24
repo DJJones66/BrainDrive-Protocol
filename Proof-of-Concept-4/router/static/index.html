@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BrainDrive PoC4 Stream UI</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a30;
+      --panel-2: #1b2746;
+      --text: #e8eefc;
+      --muted: #95a4cb;
+      --accent: #55d6be;
+      --danger: #f06b7e;
+      --border: #2d3b63;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 10% -10%, #1a315f 0%, transparent 60%),
+        radial-gradient(700px 500px at 90% -10%, #23466f 0%, transparent 65%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .title {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    select, textarea, input, button {
+      font: inherit;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #0c1224;
+      color: var(--text);
+      padding: 10px;
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+      margin-top: 12px;
+      line-height: 1.35;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+      align-items: center;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: #1d2a4a;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border-color: #3a8f7f;
+      background: #0d5a4f;
+    }
+
+    button.warn {
+      border-color: #7f3a48;
+      background: #5d1c2a;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .columns {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1.4fr 1fr;
+    }
+
+    pre {
+      margin: 0;
+      background: #090f1f;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 240px;
+      max-height: 520px;
+      overflow: auto;
+    }
+
+    .token {
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .ok { color: var(--accent); }
+    .err { color: var(--danger); }
+
+    a {
+      color: #9bd8ff;
+    }
+
+    @media (max-width: 900px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h1 class="title">BrainDrive PoC4 Streaming UI</h1>
+      <p class="sub">Router: <span id="routerOrigin"></span> | Use <code>/node:builder</code> and <code>/model:qwen3:8b</code> directives in prompt or selectors below.</p>
+
+      <div class="grid">
+        <div>
+          <label for="nodeSelect">Node</label>
+          <select id="nodeSelect"></select>
+        </div>
+        <div>
+          <label for="modelSelect">Model</label>
+          <select id="modelSelect"></select>
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <label style="display:flex;gap:8px;align-items:center;color:var(--text)">
+            <input type="checkbox" id="forceAsync" style="width:auto">
+            Force Async Fallback
+          </label>
+        </div>
+        <div>
+          <label for="maxTokens">Max Tokens (num_predict)</label>
+          <input id="maxTokens" type="number" min="1" step="1" value="512" placeholder="512">
+        </div>
+        <div>
+          <label for="stopSeqInput">Stop Sequences (comma-separated)</label>
+          <input id="stopSeqInput" type="text" placeholder="<|eot_id|>, </s>">
+        </div>
+      </div>
+
+      <textarea id="promptInput" placeholder="Ask something...&#10;Example: /node:builder /model:qwen3:8b Build a minimal streaming + async architecture."></textarea>
+
+      <div class="row">
+        <button class="primary" id="streamBtn">Stream</button>
+        <button id="completeBtn">Complete</button>
+        <button id="clearBtn">Clear</button>
+        <button class="warn" id="stopBtn" disabled>Stop Stream</button>
+        <span class="status" id="statusLine">idle</span>
+      </div>
+    </section>
+
+    <section class="columns">
+      <div class="card">
+        <h2 class="title" style="font-size:16px">Assistant Output</h2>
+        <pre id="output" class="token"></pre>
+      </div>
+      <div class="card">
+        <h2 class="title" style="font-size:16px">Events</h2>
+        <pre id="events" class="meta"></pre>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const nodeSelect = document.getElementById('nodeSelect');
+    const modelSelect = document.getElementById('modelSelect');
+    const promptInput = document.getElementById('promptInput');
+    const forceAsync = document.getElementById('forceAsync');
+    const maxTokens = document.getElementById('maxTokens');
+    const stopSeqInput = document.getElementById('stopSeqInput');
+    const output = document.getElementById('output');
+    const events = document.getElementById('events');
+    const streamBtn = document.getElementById('streamBtn');
+    const completeBtn = document.getElementById('completeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const statusLine = document.getElementById('statusLine');
+
+    document.getElementById('routerOrigin').textContent = window.location.origin;
+
+    let nodeProfiles = {};
+    let abortController = null;
+
+    function appendEvent(line, cls = '') {
+      const prefix = new Date().toLocaleTimeString();
+      const decorated = cls ? `[${prefix}] ${line}` : `[${prefix}] ${line}`;
+      events.textContent += decorated + "\n";
+      events.scrollTop = events.scrollHeight;
+    }
+
+    function setStatus(text, cls = '') {
+      statusLine.textContent = text;
+      statusLine.className = 'status ' + cls;
+    }
+
+    function generateMessageId() {
+      if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        return window.crypto.randomUUID();
+      }
+
+      if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+        const bytes = new Uint8Array(16);
+        window.crypto.getRandomValues(bytes);
+        bytes[6] = (bytes[6] & 0x0f) | 0x40;
+        bytes[8] = (bytes[8] & 0x3f) | 0x80;
+        const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+        return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+      }
+
+      const ts = Date.now().toString(16);
+      const rnd = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16);
+      return `fallback-${ts}-${rnd}`;
+    }
+
+    function buildMessage() {
+      const parsedMaxTokens = Number.parseInt(maxTokens.value, 10);
+      const message = {
+        protocol_version: '0.1',
+        message_id: generateMessageId(),
+        intent: 'chat',
+        payload: {
+          text: promptInput.value
+        },
+        extensions: {
+          identity: {
+            actor_id: 'user.web_ui',
+            actor_type: 'human',
+            roles: ['user']
+          },
+          llm: {
+            node: nodeSelect.value,
+            model: modelSelect.value
+          }
+        }
+      };
+
+      if (Number.isFinite(parsedMaxTokens) && parsedMaxTokens > 0) {
+        message.extensions.llm.max_tokens = parsedMaxTokens;
+      }
+
+      const stopSeq = stopSeqInput.value
+        .split(',')
+        .map((value) => value.trim())
+        .filter((value) => value.length > 0);
+      if (stopSeq.length > 0) {
+        message.extensions.llm.stop = stopSeq;
+      }
+
+      if (forceAsync.checked) {
+        message.payload.force_async = true;
+      }
+      return message;
+    }
+
+    function resetOutput() {
+      output.textContent = '';
+      events.textContent = '';
+    }
+
+    function setBusy(isBusy) {
+      streamBtn.disabled = isBusy;
+      completeBtn.disabled = isBusy;
+      stopBtn.disabled = !isBusy;
+    }
+
+    async function loadNodes() {
+      const res = await fetch('/nodes');
+      const payload = await res.json();
+      nodeProfiles = payload.nodes || {};
+
+      nodeSelect.innerHTML = '';
+      Object.keys(nodeProfiles).forEach((key) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = `${key} (${nodeProfiles[key].default_model})`;
+        nodeSelect.appendChild(option);
+      });
+
+      nodeSelect.value = 'general';
+    }
+
+    async function loadModels() {
+      const res = await fetch('/models');
+      const payload = await res.json();
+      const models = payload.models || [];
+
+      modelSelect.innerHTML = '';
+      models.forEach((model) => {
+        const option = document.createElement('option');
+        option.value = model;
+        option.textContent = model;
+        modelSelect.appendChild(option);
+      });
+
+      const defaultModel = nodeProfiles[nodeSelect.value]?.default_model;
+      if (defaultModel && models.includes(defaultModel)) {
+        modelSelect.value = defaultModel;
+      }
+    }
+
+    async function loadRouterDefaults() {
+      try {
+        const res = await fetch('/api');
+        if (!res.ok) return;
+        const payload = await res.json();
+
+        if (Number.isInteger(payload.ollama_default_max_tokens) && payload.ollama_default_max_tokens > 0) {
+          maxTokens.value = String(payload.ollama_default_max_tokens);
+        }
+        if (Array.isArray(payload.ollama_default_stop) && payload.ollama_default_stop.length > 0) {
+          stopSeqInput.value = payload.ollama_default_stop.join(', ');
+        }
+      } catch {
+      }
+    }
+
+    function parseSseChunk(chunk) {
+      let event = 'message';
+      let data = '';
+
+      chunk.split('\n').forEach((line) => {
+        if (line.startsWith('event:')) {
+          event = line.slice(6).trim();
+        } else if (line.startsWith('data:')) {
+          data += line.slice(5).trim();
+        }
+      });
+
+      let payload = {};
+      if (data) {
+        try {
+          payload = JSON.parse(data);
+        } catch {
+          payload = { raw: data };
+        }
+      }
+
+      if (event === 'meta') {
+        appendEvent(
+          `meta node=${payload.node} model=${payload.model} async=${payload.async_fallback} max_tokens=${payload.max_tokens} stop_count=${payload.stop_count || 0}`
+        );
+        return { terminal: false };
+      } else if (event === 'token') {
+        output.textContent += payload.text || '';
+        return { terminal: false };
+      } else if (event === 'async_queued') {
+        output.textContent += '\n\n[Queued to durable async pipeline]\n';
+        appendEvent(`queued correlation_id=${payload.correlation_id || payload.message_id}`, 'ok');
+        if (payload.status_url) {
+          appendEvent(`status: ${payload.status_url}`, 'ok');
+        }
+        if (payload.replay_url) {
+          appendEvent(`replay: ${payload.replay_url}`, 'ok');
+        }
+        return { terminal: false };
+      } else if (event === 'done') {
+        appendEvent(
+          `done route_mode=${payload.route_mode || 'stream'} token_events=${payload.token_events || 0} reason=${payload.ollama_done_reason || 'n/a'}`,
+          'ok'
+        );
+        return { terminal: true, outcome: 'done' };
+      } else if (event === 'error') {
+        appendEvent(`error ${JSON.stringify(payload)}`, 'err');
+        return { terminal: true, outcome: 'error' };
+      }
+
+      return { terminal: false };
+    }
+
+    async function runStream() {
+      const message = buildMessage();
+      if (!message.payload.text.trim()) {
+        appendEvent('prompt is empty', 'err');
+        return;
+      }
+
+      resetOutput();
+      setBusy(true);
+      setStatus('streaming...', 'ok');
+      appendEvent(`stream request id=${message.message_id}`);
+
+      abortController = new AbortController();
+
+      try {
+        const res = await fetch('/stream', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message),
+          signal: abortController.signal,
+        });
+
+        if (!res.ok || !res.body) {
+          appendEvent(`stream failed status=${res.status}`, 'err');
+          return;
+        }
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let terminalOutcome = null;
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          let idx;
+          while ((idx = buffer.indexOf('\n\n')) >= 0) {
+            const chunk = buffer.slice(0, idx);
+            buffer = buffer.slice(idx + 2);
+            if (chunk.trim()) {
+              const parsed = parseSseChunk(chunk);
+              if (parsed && parsed.terminal) {
+                terminalOutcome = parsed.outcome || 'done';
+                try {
+                  await reader.cancel();
+                } catch {
+                }
+                break;
+              }
+            }
+          }
+
+          if (terminalOutcome) {
+            break;
+          }
+        }
+
+        if (terminalOutcome === 'error') {
+          setStatus('error', 'err');
+        } else {
+          setStatus('stream complete', 'ok');
+        }
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          appendEvent('stream aborted by user');
+          setStatus('aborted');
+        } else {
+          appendEvent(`stream exception: ${err}`, 'err');
+          setStatus('error', 'err');
+        }
+      } finally {
+        abortController = null;
+        setBusy(false);
+      }
+    }
+
+    async function runComplete() {
+      const message = buildMessage();
+      if (!message.payload.text.trim()) {
+        appendEvent('prompt is empty', 'err');
+        return;
+      }
+
+      resetOutput();
+      setBusy(true);
+      setStatus('waiting complete...', 'ok');
+      appendEvent(`complete request id=${message.message_id}`);
+
+      try {
+        const res = await fetch('/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(message),
+        });
+        const payload = await res.json();
+        output.textContent = JSON.stringify(payload, null, 2);
+
+        if (payload.intent === 'accepted_async') {
+          appendEvent('complete queued to async fallback', 'ok');
+          const info = payload.payload || {};
+          if (info.status_url) appendEvent(`status: ${info.status_url}`, 'ok');
+          if (info.replay_url) appendEvent(`replay: ${info.replay_url}`, 'ok');
+        } else if (payload.intent === 'error') {
+          appendEvent('complete returned error', 'err');
+        } else {
+          appendEvent('complete returned sync response', 'ok');
+        }
+
+        setStatus('complete done', 'ok');
+      } catch (err) {
+        appendEvent(`complete exception: ${err}`, 'err');
+        setStatus('error', 'err');
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    nodeSelect.addEventListener('change', () => {
+      const model = nodeProfiles[nodeSelect.value]?.default_model;
+      if (model) {
+        modelSelect.value = model;
+      }
+    });
+
+    streamBtn.addEventListener('click', runStream);
+    completeBtn.addEventListener('click', runComplete);
+    clearBtn.addEventListener('click', () => resetOutput());
+    stopBtn.addEventListener('click', () => {
+      if (abortController) {
+        abortController.abort();
+      }
+    });
+
+    (async () => {
+      try {
+        await loadNodes();
+        await loadModels();
+        await loadRouterDefaults();
+        appendEvent('ready');
+      } catch (err) {
+        appendEvent(`init error: ${err}`, 'err');
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+services:
+  bdp-poc:
+    image: python:3.12-slim
+    container_name: bdp-poc
+    working_dir: /workspace
+    command: ["python", "-u", "ancp_demo.py"]
+    stdin_open: true
+    tty: true
+    environment:
+      BDP_DATA_DIR: ${BDP_DATA_DIR:-/workspace/data}
+    volumes:
+      - ./:/workspace

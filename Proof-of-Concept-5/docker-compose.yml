@@ -1,0 +1,36 @@
+services:
+  bdp-secure-router:
+    image: python:3.12-slim
+    working_dir: /workspace
+    command: ["python", "-u", "router/router_service.py"]
+    environment:
+      ROUTER_PORT: "${ROUTER_PORT:-8080}"
+      OLLAMA_BASE_URL: "${OLLAMA_BASE_URL:-http://host.docker.internal:11434}"
+      BDP_DATA_DIR: /workspace/data
+      USER_DB_FILE: /workspace/data/users.json
+      JWT_SECRET: "${JWT_SECRET:-change-this-in-real-deployments}"
+      JWT_ISSUER: "${JWT_ISSUER:-bdp-poc5}"
+      JWT_TTL_SEC: "${JWT_TTL_SEC:-3600}"
+      OLLAMA_DEFAULT_MAX_TOKENS: "${OLLAMA_DEFAULT_MAX_TOKENS:-512}"
+      OLLAMA_DEFAULT_STOP: "${OLLAMA_DEFAULT_STOP:-}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/workspace
+    expose:
+      - "8080"
+
+  caddy:
+    image: caddy:2.8-alpine
+    depends_on:
+      - bdp-secure-router
+    environment:
+      BDP_HOST: "${BDP_HOST:-localhost}"
+      CADDY_HTTPS_PORT: "${CADDY_HTTPS_PORT:-8443}"
+    ports:
+      - "${CADDY_HTTP_PORT:-8085}:80"
+      - "${CADDY_HTTPS_PORT:-8443}:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./data/caddy_data:/data
+      - ./data/caddy_config:/config

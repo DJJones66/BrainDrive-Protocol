@@ -1,0 +1,88 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    environment:
+      RABBITMQ_DEFAULT_USER: bdp
+      RABBITMQ_DEFAULT_PASS: bdp
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+
+  router:
+    build:
+      context: .
+      dockerfile: docker/python.Dockerfile
+    working_dir: /workspace
+    command: ["python", "-u", "router/router_service.py"]
+    environment:
+      ROUTER_PORT: "8080"
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: bdp
+      RABBITMQ_PASS: bdp
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      BDP_DATA_DIR: /workspace/data/logs
+    depends_on:
+      - rabbitmq
+      - redis
+    volumes:
+      - ./:/workspace
+    ports:
+      - "${POC3_PORT:-8082}:8080"
+
+  worker-echo:
+    build:
+      context: .
+      dockerfile: docker/python.Dockerfile
+    working_dir: /workspace
+    command: ["python", "-u", "workers/echo_worker/worker.py"]
+    environment:
+      WORKER_NODE_ID: terminal.echo
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      DEFAULT_CHAT_MODEL: ministral-3:8b
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: bdp
+      RABBITMQ_PASS: bdp
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      ROUTER_RESULT_URL: http://router:8080/worker_result
+      MAX_ATTEMPTS: "3"
+      RETRY_DELAY_SEC: "1.0"
+      BDP_DATA_DIR: /workspace/data/logs
+    depends_on:
+      - rabbitmq
+      - redis
+      - router
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./:/workspace
+
+  worker-logger:
+    build:
+      context: .
+      dockerfile: docker/python.Dockerfile
+    working_dir: /workspace
+    command: ["python", "-u", "workers/logger_worker/worker.py"]
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: bdp
+      RABBITMQ_PASS: bdp
+      BDP_DATA_DIR: /workspace/data/logs
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./:/workspace
