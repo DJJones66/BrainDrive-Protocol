@@ -1,0 +1,981 @@
+{
+  "nodes": [
+    {
+      "node_id": "node.model.ollama",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-model-ollama:8129/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "model.chat.complete",
+          "description": "Complete chat using Ollama provider",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "prompt"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "summarize this spec"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "external",
+          "capability_version": "0.1.0",
+          "provider": "ollama"
+        },
+        {
+          "name": "model.chat.stream",
+          "description": "Stream chat using Ollama provider",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "prompt"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "stream response"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "external",
+          "capability_version": "0.1.0",
+          "provider": "ollama"
+        },
+        {
+          "name": "model.catalog.list",
+          "description": "List Ollama models",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "list models"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "external",
+          "capability_version": "0.1.0",
+          "provider": "ollama"
+        }
+      ],
+      "requires": [],
+      "priority": 165,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.422948+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.008241+00:00",
+      "expires_at_epoch": 1772130295.0082345,
+      "status": "active",
+      "health": {
+        "success_count": 1,
+        "failure_count": 0,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": 2.8134819585829973,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-25T18:17:34.867469+00:00"
+      }
+    },
+    {
+      "node_id": "node.model.openrouter",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-model-openrouter:8128/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "model.chat.complete",
+          "description": "Complete chat using OpenRouter provider",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "prompt"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "summarize this spec"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "external",
+          "capability_version": "0.1.0",
+          "provider": "openrouter"
+        },
+        {
+          "name": "model.chat.stream",
+          "description": "Stream chat using OpenRouter provider",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "prompt"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "stream response"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "external",
+          "capability_version": "0.1.0",
+          "provider": "openrouter"
+        },
+        {
+          "name": "model.catalog.list",
+          "description": "List OpenRouter models",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "list models"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "external",
+          "capability_version": "0.1.0",
+          "provider": "openrouter"
+        }
+      ],
+      "requires": [],
+      "priority": 170,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.494610+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.050892+00:00",
+      "expires_at_epoch": 1772130295.0508885,
+      "status": "active",
+      "health": {
+        "success_count": 169,
+        "failure_count": 5,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": 8726.595128311837,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-26T18:12:15.162680+00:00"
+      }
+    },
+    {
+      "node_id": "interface.cli",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-chat-general:8130/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "chat.general",
+          "description": "General chat response",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "text"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "chat about my goals"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "runtime.cancel_generation",
+          "description": "Cancel active generation",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "stop generating"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "runtime.compact_context",
+          "description": "Compact current context when token budget is high",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "compact context"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        }
+      ],
+      "requires": [],
+      "priority": 100,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.631160+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.078905+00:00",
+      "expires_at_epoch": 1772130295.0789027,
+      "status": "active",
+      "health": {
+        "success_count": 1,
+        "failure_count": 0,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": 12.349674943834543,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-25T18:38:57.656592+00:00"
+      }
+    },
+    {
+      "node_id": "node.approval.gate",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-approval-gate:8126/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "approval.request",
+          "description": "Create approval request for pending mutation",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "intent_being_guarded",
+              "changes"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "request approval for spec save"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "approval.resolve",
+          "description": "Resolve approval request",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "request_id",
+              "decision"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "approve request appr-123"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        }
+      ],
+      "requires": [],
+      "priority": 190,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.525236+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.059892+00:00",
+      "expires_at_epoch": 1772130295.059889,
+      "status": "active",
+      "health": {
+        "success_count": 20,
+        "failure_count": 0,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": 3.19189327030405,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-26T18:12:12.826376+00:00"
+      }
+    },
+    {
+      "node_id": "node.workflow.folder",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-workflow-folder:8122/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "folder.create",
+          "description": "Create topic folder with AGENT.md",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "topic"
+            ]
+          },
+          "risk_class": "mutate",
+          "required_extensions": [],
+          "approval_required": true,
+          "examples": [
+            "create folder for finances"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "folder.switch",
+          "description": "Switch active folder context",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "folder"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "switch to finances"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "folder.list",
+          "description": "List available folders",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "list folders"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        }
+      ],
+      "requires": [],
+      "priority": 140,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.503928+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.055218+00:00",
+      "expires_at_epoch": 1772130295.0552146,
+      "status": "active",
+      "health": {
+        "success_count": 122,
+        "failure_count": 1,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": 20.667680049152395,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-26T18:12:12.911848+00:00"
+      }
+    },
+    {
+      "node_id": "node.memory.fs",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-memory-fs:8121/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "memory.read",
+          "description": "Read file content from library",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "path"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "read finances/spec.md"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "memory.list",
+          "description": "List files under library path",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "list files"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "memory.search",
+          "description": "Search text in library files",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "query"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "search for milestone"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "memory.write.propose",
+          "description": "Write content to file after approval",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "path",
+              "content"
+            ]
+          },
+          "risk_class": "mutate",
+          "required_extensions": [],
+          "approval_required": true,
+          "examples": [
+            "save spec.md"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "memory.edit.propose",
+          "description": "Edit existing file after approval",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "path"
+            ]
+          },
+          "risk_class": "mutate",
+          "required_extensions": [],
+          "approval_required": true,
+          "examples": [
+            "update plan.md"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "memory.delete.propose",
+          "description": "Delete file after approval",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "path"
+            ]
+          },
+          "risk_class": "destructive",
+          "required_extensions": [],
+          "approval_required": true,
+          "examples": [
+            "delete old draft"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        }
+      ],
+      "requires": [],
+      "priority": 180,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.491124+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.036051+00:00",
+      "expires_at_epoch": 1772130295.0360477,
+      "status": "active",
+      "health": {
+        "success_count": 51,
+        "failure_count": 0,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": 8.504618613830079,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-26T18:12:13.086607+00:00"
+      }
+    },
+    {
+      "node_id": "node.runtime.bootstrap",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-runtime-bootstrap:8120/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "system.bootstrap",
+          "description": "Initialize runtime prerequisites and skill files",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "mutate",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "bootstrap system"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "system.health.check",
+          "description": "Return runtime health",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "health check"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        }
+      ],
+      "requires": [],
+      "priority": 150,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.646816+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.083268+00:00",
+      "expires_at_epoch": 1772130295.083265,
+      "status": "active",
+      "health": {
+        "success_count": 91,
+        "failure_count": 0,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": 12.202038796091133,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-26T18:10:05.901626+00:00"
+      }
+    },
+    {
+      "node_id": "node.git.ops",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-git-ops:8127/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "git.init_if_needed",
+          "description": "Initialize git repository when missing",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "mutate",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "initialize git"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "git.commit.approved_change",
+          "description": "Commit approved file changes",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "paths",
+              "commit_message"
+            ]
+          },
+          "risk_class": "mutate",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "commit approved spec update"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        }
+      ],
+      "requires": [],
+      "priority": 120,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.567587+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.072015+00:00",
+      "expires_at_epoch": 1772130295.0720115,
+      "status": "active",
+      "health": {
+        "success_count": 102,
+        "failure_count": 0,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": 12.134211494509643,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-26T18:12:12.860914+00:00"
+      }
+    },
+    {
+      "node_id": "node.audit.log",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-audit-log:8131/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "audit.record",
+          "description": "Append auditable event record",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "record audit event"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        }
+      ],
+      "requires": [],
+      "priority": 50,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.467958+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.027754+00:00",
+      "expires_at_epoch": 1772130295.027749,
+      "status": "active",
+      "health": {
+        "success_count": 0,
+        "failure_count": 0,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": null,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-25T18:16:07.306690+00:00"
+      }
+    },
+    {
+      "node_id": "node.workflow.skill",
+      "node_version": "0.1.0",
+      "endpoint_url": "http://node-workflow-skill:8123/bdp",
+      "supported_protocol_versions": [
+        "0.1"
+      ],
+      "capabilities": [
+        {
+          "name": "skill.catalog.list",
+          "description": "List available skill definitions",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "list skills"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "skill.execute.read",
+          "description": "Execute read-only skill action",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "skill_id",
+              "action"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "execute read skill"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "skill.execute.stateful",
+          "description": "Execute stateful skill action with workflow/session updates",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "skill_id",
+              "action"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "execute stateful skill"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "skill.execute.mutate",
+          "description": "Execute mutate-tier skill action",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "skill_id",
+              "action"
+            ]
+          },
+          "risk_class": "mutate",
+          "required_extensions": [],
+          "approval_required": true,
+          "examples": [
+            "execute mutate skill"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "skill.execute.destructive",
+          "description": "Execute destructive-tier skill action",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "skill_id",
+              "action"
+            ]
+          },
+          "risk_class": "destructive",
+          "required_extensions": [],
+          "approval_required": true,
+          "examples": [
+            "execute destructive skill"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "workflow.interview.start",
+          "description": "Start interview flow",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "start interview"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "workflow.interview.continue",
+          "description": "Continue interview flow",
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "answer"
+            ]
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "my answer is ..."
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "workflow.interview.complete",
+          "description": "Complete interview and summarize",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "finish interview"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "file",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "workflow.spec.generate",
+          "description": "Generate spec markdown from interview state",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "generate spec"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "workflow.spec.propose_save",
+          "description": "Create approval payload for saving spec.md",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "mutate",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "save spec"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "workflow.plan.generate",
+          "description": "Generate plan markdown from spec",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "read",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "generate plan"
+          ],
+          "idempotency": "idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        },
+        {
+          "name": "workflow.plan.propose_save",
+          "description": "Create approval payload for saving plan.md",
+          "input_schema": {
+            "type": "object"
+          },
+          "risk_class": "mutate",
+          "required_extensions": [],
+          "approval_required": false,
+          "examples": [
+            "save plan"
+          ],
+          "idempotency": "non_idempotent",
+          "side_effect_scope": "none",
+          "capability_version": "0.1.0",
+          "provider": null
+        }
+      ],
+      "requires": [],
+      "priority": 140,
+      "auth": {
+        "registration_token": "<redacted>"
+      },
+      "lease_token": "<redacted>",
+      "registered_at": "2026-02-26T18:06:43.552509+00:00",
+      "last_heartbeat_at": "2026-02-26T18:24:40.066760+00:00",
+      "expires_at_epoch": 1772130295.066756,
+      "status": "active",
+      "health": {
+        "success_count": 44,
+        "failure_count": 2,
+        "consecutive_failures": 0,
+        "ewma_latency_ms": 15931.823188387149,
+        "circuit_open_until": 0.0,
+        "updated_at": "2026-02-26T18:12:12.806821+00:00"
+      }
+    }
+  ]
+}

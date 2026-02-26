@@ -1,0 +1,184 @@
+{
+  "requests": {
+    "appr-1fea26ea-4a14-4058-a872-006818390a55": {
+      "request_id": "appr-1fea26ea-4a14-4058-a872-006818390a55",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "my-finances/spec.md",
+          "operation": "write",
+          "summary": "Save generated spec",
+          "diff_preview": "# my-finances Spec\n\n## Goal\ndefine objective\n\n## Success Criteria\n- achieve target\n\n## Current State\ncurrent state baseline\n\n## Risks\n- risk from schedule\n\n## First Milestone\n- first milestone draft\n"
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-25T18:33:51.657398+00:00",
+      "resolved_at": "2026-02-25T18:33:51.666364+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "owner"
+    },
+    "appr-2ddfbabd-a034-428b-8d8b-1687407cafcc": {
+      "request_id": "appr-2ddfbabd-a034-428b-8d8b-1687407cafcc",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "my-goals/spec.md",
+          "operation": "write",
+          "summary": "Save generated spec",
+          "diff_preview": "# my-goals Spec\n\n## Goal\ndefine objective\n\n## Success Criteria\n- achieve target\n\n## Current State\ncurrent baseline\n\n## Risks\n- risk from schedule\n\n## First Milestone\n- first milestone draft\n"
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-25T18:34:56.134399+00:00",
+      "resolved_at": "2026-02-25T18:34:56.142031+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "owner"
+    },
+    "appr-ff19a94a-002e-47b6-a072-c56063eeadc7": {
+      "request_id": "appr-ff19a94a-002e-47b6-a072-c56063eeadc7",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "my-finances/spec.md",
+          "operation": "write",
+          "summary": "Save generated spec",
+          "diff_preview": "# my-finances Spec\n\n## Goal\nEnable Small and Medium Businesses (SMBs) to leverage AI automation for streamlining financial workflows within the my-finances folder.\n\n## Success Criteria\n[TODO: Success criteria to be defined upon completion of full interview rounds \u2014 criteria should be measurable and tied to specific user outcomes]\n\n## Current State\nThe my-finances folder exists as a working directory for financial management activities. An interview process was initiated to define AI automation r"
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-25T21:08:34.041581+00:00",
+      "resolved_at": "2026-02-25T21:08:34.052489+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "owner"
+    },
+    "appr-9136cf70-a9c1-46f6-9010-91eb1aa1a700": {
+      "request_id": "appr-9136cf70-a9c1-46f6-9010-91eb1aa1a700",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "my-finances/plan.md",
+          "operation": "write",
+          "summary": "Save generated plan",
+          "diff_preview": "# my-finances Plan\n\n## Phase 1: Clarify\n\nThe spec indicates this project is in a very early stage - only a high-level intent has been captured, with no specific problem statements, user flows, or technical requirements. This phase focuses on completing the requirements gathering that was started but interrupted.\n\n- Schedule and conduct the remaining interview rounds (Rounds 2\u20137) with target SMB users\n- Document specific pain points SMBs face in financial workflows from interview data\n- Define ta"
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-25T21:09:11.539408+00:00",
+      "resolved_at": "2026-02-25T21:09:11.549474+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "owner"
+    },
+    "appr-71a0939e-2e50-4167-894e-f50a79d5ea79": {
+      "request_id": "appr-71a0939e-2e50-4167-894e-f50a79d5ea79",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "single-skill-node/spec.md",
+          "operation": "write",
+          "summary": "Save generated spec",
+          "diff_preview": "# single-skill-node Spec\n\n## Goal\n\nCreate a unified skill node that consolidates interview, spec, and plan functionalities into a single interface, capable of handling legacy workflow intents through intelligent mode selection.\n\n## Success Criteria\n\nThe unified node must successfully handle legacy workflow intents without losing functionality or introducing compatibility issues. Specifically, the node shall:\n\n- Execute interview, spec, and plan operations through a unified interface\n- Maintain f"
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-26T12:33:32.222651+00:00",
+      "resolved_at": "2026-02-26T12:33:32.232082+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "owner"
+    },
+    "appr-fcf00823-9cd6-45a6-ac11-03a85128c90d": {
+      "request_id": "appr-fcf00823-9cd6-45a6-ac11-03a85128c90d",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "single-skill-node/plan.md",
+          "operation": "write",
+          "summary": "Save generated plan",
+          "diff_preview": "# single-skill-node Plan\n\n## Phase 1: Clarify\n\n- Analyze existing interview, spec, and plan nodes to document their distinct interfaces, workflows, and approval safety checkpoints\n- Identify all input signals and metadata currently used to route intents to the appropriate node (intent keywords, context flags, user roles)\n- Map the existing prompt matrix to understand all functional capabilities that must be preserved in the unified node\n- Interview stakeholders to confirm the precise approval sa"
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-26T12:35:23.163933+00:00",
+      "resolved_at": "2026-02-26T12:35:23.173222+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "owner"
+    },
+    "appr-d4c00f9b-511b-43e1-9649-d166a9f0c236": {
+      "request_id": "appr-d4c00f9b-511b-43e1-9649-d166a9f0c236",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "no-prefix-interview-test/spec.md",
+          "operation": "write",
+          "summary": "Save generated spec",
+          "diff_preview": "# no-prefix-interview-test Spec\n\n## Goal\nReplace three workflow nodes with a single skill node to streamline the system architecture while maintaining existing functionality.\n\n## Success Criteria\n- Interview specifications continue to function without modification\n- Plan flows execute identically to the current three-node implementation\n- No regression in approval gate behavior\n- Routing logs continue to be generated correctly\n\n## Current State\nThe existing system consists of three workflow node"
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-26T12:41:47.035349+00:00",
+      "resolved_at": "2026-02-26T12:41:47.045041+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "owner"
+    },
+    "appr-73974f17-8369-4174-8782-22e3545a95e1": {
+      "request_id": "appr-73974f17-8369-4174-8782-22e3545a95e1",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "no-prefix-interview-test/plan.md",
+          "operation": "write",
+          "summary": "Save generated plan",
+          "diff_preview": "# no-prefix-interview-test Plan\n\n## Phase 1: Clarify\n- Identify and document the three workflow nodes currently handling approval gates and routing logs through code analysis and system audits\n- Interview stakeholders or review existing documentation to determine specific node names and identifiers referenced in the spec\n- Document exact responsibilities and edge case behaviors of each of the three existing nodes\n- Analyze how intent compatibility is currently encoded in the three-node architect"
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-26T12:43:04.084026+00:00",
+      "resolved_at": "2026-02-26T12:43:04.093020+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "owner"
+    },
+    "appr-b9270c98-6387-4fae-ade8-5f946aa8f4f0": {
+      "request_id": "appr-b9270c98-6387-4fae-ade8-5f946aa8f4f0",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "full-prompt-matrix-1772129405/spec.md",
+          "operation": "write",
+          "summary": "Save generated spec",
+          "diff_preview": "# full-prompt-matrix-1772129405 Spec\n\n## Goal\n\nBuild a unified node for workflow tasks that consolidates functionality from separate interview spec and plan flows into a single, integrated system.\n\n## Success Criteria\n\n- Achieve full parity between the existing interview spec flow and plan flow\n- Maintain safe approval processes throughout the unified workflow\n- Ensure no regression in routing functionality during and after consolidation\n\n## Current State\n\nThe system currently operates with sepa"
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-26T18:11:40.568150+00:00",
+      "resolved_at": "2026-02-26T18:11:40.577592+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "matrix-runner"
+    },
+    "appr-965d6563-59f1-4332-8534-71a735495040": {
+      "request_id": "appr-965d6563-59f1-4332-8534-71a735495040",
+      "intent_being_guarded": "memory.write.propose",
+      "changes": [
+        {
+          "path": "full-prompt-matrix-1772129405/plan.md",
+          "operation": "write",
+          "summary": "Save generated plan",
+          "diff_preview": "# full-prompt-matrix-1772129405 Plan\n\n## Phase 1: Clarify\n\n- Document the current interview spec flow architecture and identify all routing decision points\n- Document the current plan flow architecture and identify all routing decision points\n- Analyze the routing paths that differ between interview spec flow and plan flow to determine harmonization requirements\n- Define the technical implementation requirements for the unified node interface, addressing the first open question\n- Identify which "
+        }
+      ],
+      "status": "approved",
+      "requested_at": "2026-02-26T18:12:12.816405+00:00",
+      "resolved_at": "2026-02-26T18:12:12.824979+00:00",
+      "decision": "approved",
+      "decision_note": "",
+      "decided_by": "matrix-runner"
+    }
+  }
+}
