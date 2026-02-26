@@ -41,6 +41,12 @@ yarn-error.log*
 
 # Docker bind-mount runtime state and generated data
 Proof-of-Concept-*/data/
+BrainDrive-MVP/data/runtime/**
+
+# BrainDrive MVP library: keep only .braindrive content
+BrainDrive-MVP/data/library/*
+!BrainDrive-MVP/data/library/.braindrive/
+!BrainDrive-MVP/data/library/.braindrive/**
 
 # Local scratch notes
 Concepts/
