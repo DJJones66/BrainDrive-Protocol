@@ -29,8 +29,22 @@ BrainDrive-MVP consolidates dedicated interview/spec/plan nodes into one unified
 
 ```bash
 cd /home/hacker/Projects/BrainDrive-Protocal/BrainDrive-MVP
-cp .env.example .env
-docker compose up -d
+./scripts/bootstrap.sh
+```
+
+`bootstrap.sh` will:
+
+- create `.env` from `.env.example` if missing
+- ensure `data/runtime` and `data/library` exist
+- start compose with your current host `uid:gid` (no manual `.env` edit needed)
+- wait for `router.core` and `intent.router.natural-language` health endpoints
+
+Manual startup (if preferred):
+
+```bash
+cd /home/hacker/Projects/BrainDrive-Protocal/BrainDrive-MVP
+cp -n .env.example .env
+HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up -d --build
 ```
 
 ## Terminal CLI App
@@ -154,13 +168,14 @@ docker compose up -d --build
 - If model requests fail with router-level timeout errors, increase `ROUTER_NODE_TIMEOUT_SEC` (default `45`) in `.env`, then restart compose.
 - If you see intermittent CLI transport errors while model calls are slow, increase `INTENT_ROUTER_ROUTE_TIMEOUT_SEC` (default `60`) in `.env`, then restart compose.
 - If interview/spec/plan generation fails, verify provider config and model-node health first (`/health` command in CLI).
+- For new machines, prefer `./scripts/bootstrap.sh` so compose always uses your host `uid:gid`.
 - If you get `Permission denied` editing `data/...` files from host, fix ownership once:
 
 ```bash
-docker compose run --rm --entrypoint sh node-router -lc 'chown -R 1001:1001 /workspace/data'
+docker compose run --rm --entrypoint sh node-router -lc "chown -R $(id -u):$(id -g) /workspace/data"
 ```
 
-- Compose runs services as `HOST_UID:HOST_GID` (defaults `1001:1001`). Set these in `.env` to match your host user when needed.
+- Compose runs services as `HOST_UID:HOST_GID` (defaults `1001:1001`).
 
 ## Stop
 
