@@ -1,0 +1,5 @@
+# Keep only BrainDrive internal library assets
+/*
+!/.gitignore
+!/.braindrive/
+!/.braindrive/**

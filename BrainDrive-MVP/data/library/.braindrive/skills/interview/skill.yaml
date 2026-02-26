@@ -1,0 +1,13 @@
+skill_id: interview
+version: 1.0.0
+description: Requirements interview workflow
+actions:
+  start:
+    execution_tier: stateful
+    prompt_template: prompts/start.md
+  continue:
+    execution_tier: stateful
+    prompt_template: prompts/continue.md
+  complete:
+    execution_tier: stateful
+    prompt_template: prompts/complete.md

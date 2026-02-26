@@ -1,0 +1,10 @@
+skill_id: plan-generation
+version: 1.0.0
+description: Build plan generation workflow
+actions:
+  generate:
+    execution_tier: read
+    prompt_template: prompts/generate.md
+  propose_save:
+    execution_tier: stateful
+    prompt_template: prompts/propose-save.md
